@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVG Background Generator</title>
+  </head>
+
+  <body>
+    <img id="img-svg" src="" />
+    <script lang="js">
+      const side = 30;
+      const space = 2;
+      const tip = 27;
+
+      const colors = [
+        "#f0f0f0",
+        "#f1f1f1",
+        "#f2f2f2",
+        "#f3f3f3",
+        "#f4f4f4",
+        "#f5f5f5",
+        "#f6f6f6",
+        "#f7f7f7",
+        "#f8f8f8",
+        "#fbfbfb",
+      ];
+
+      const bounds = 224;
+      let svg = '<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"' + bounds + '\" width=\"' + bounds + '\">';
+
+      const max = bounds / (side + space);
+      let startColor = 0;
+      let startColorReverse = 0;
+      for (let x = 0; x <= max; x++) {
+        for (let y = 0; y <= max; y++) {
+          let x1 = x * space / 2 + x * tip;
+          let y1 = y * space + y * side;
+          let x2 = x1;
+          let y2 = y1 + side;
+          let x3 = x * space / 2 + (x + 1) * tip;
+          let y3 = y * space + y * side + side / 2;
+          if (x % 2 == 1) {
+            shift = side / 2 + space / 2;
+            y1 -= shift;
+            y2 -= shift;
+            y3 -= shift;
+          }
+          let color = Math.floor(Math.random() * colors.length);
+          if (y == 0) {
+            startColor = color;
+          }
+          if (y == max) {
+            color = startColor;
+          }
+          svg += '<polygon points=\"' + x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + '\" style=\"fill:' + colors[color] + '\" />';
+
+          x1 += tip;
+          x2 = x1;
+          x3 -= tip;
+          if (x % 2 == 0) {
+            shift = side / 2 + space / 2;
+            y1 -= shift;
+            y2 -= shift;
+            y3 -= shift;
+          } else {
+            shift = side / 2 + space / 2;
+            y1 += shift;
+            y2 += shift;
+            y3 += shift;
+          }
+          color = Math.floor(Math.random() * colors.length);
+          if (y == 0) {
+            startColorReverse = color;
+          }
+          if (y == max) {
+            color = startColorReverse;
+          }
+          svg += '<polygon points=\"' + x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + '\" style=\"fill:' + colors[color] + '\" />';
+        }
+      }
+
+      svg += '</svg>';
+      document.getElementById('img-svg').src = 'data:image/svg+xml;base64,' + btoa(svg);
+    </script>
+  </body>
+</html>
